@@ -10,6 +10,13 @@ part from the `readfile` function
 - If not a file and arg != "-": return error
 - if arg == "-" or empty (empty args get "-") read from stdin
 
-
 ## 3. Concatenate files
+
 I had added a for loop to go through all arguments passed into the program
+
+## 4. Number lines
+
+I need to parse flags to add line numbers to output.
+I'll put my flags into a struct and pass that around to determine what do.
+I think for args that involve formatting my output, I'll create a new function to format each line 
+as it prints according to the arguments.
