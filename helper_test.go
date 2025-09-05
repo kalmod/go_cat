@@ -11,14 +11,14 @@ func TestReadFile_validFile(t *testing.T) {
 	defer redirectStdout(os.Stdout)
 	os.Stdout = os.NewFile(uintptr(syscall.Stdin), os.DevNull)
 
-	err := readInput("./test.txt")
+	err := readInput(&opts{}, "./test.txt")
 	if err != nil {
 		t.Errorf("File 'test.txt' not found in working directory::%s", err)
 	}
 }
 
 func TestReadFile_invalidFile(t *testing.T) {
-	err := readInput("./sadasffds.fsfs")
+	err := readInput(&opts{}, "./sadasffds.fsfs")
 	if err == nil {
 		t.Errorf("File './sadasffds.fsfs' does not exist. We should get error")
 	}
@@ -33,7 +33,7 @@ func TestReadFile_testStdin(t *testing.T) {
 
 	// Save the original stdin
 	originalStdin := os.Stdin
-	defer func() { os.Stdin = originalStdin }() // Restore original Stdin
+	defer func() { os.Stdin = originalStdin }() // Restore original Stdin at end
 
 	// Repalce stdin with the pipe's read end
 	os.Stdin = r
@@ -50,7 +50,7 @@ func TestReadFile_testStdin(t *testing.T) {
 	os.Stdout = os.NewFile(uintptr(syscall.Stdin), os.DevNull)
 
 	// Now I can run the program to read from stdin
-	readInputErr := readInput("-")
+	readInputErr := readInput(&opts{}, "-")
 
 	if readInputErr != nil {
 		t.Errorf("Could not read from stdin::%s", err)

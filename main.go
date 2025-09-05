@@ -7,25 +7,26 @@ import (
 )
 
 type opts struct {
-	numbFlag *bool
+	numbFlag   *bool
+	lineNumber int
 }
 
 func main() {
-	arguments := os.Args[1:]
-	if len(arguments) < 1 {
-		// No args are Equivalent to "-"
-		arguments = append(arguments, "-")
-	}
-
-	opt := opts{}
+	var opt opts
 
 	opt.numbFlag = flag.Bool("number", false, "number all output lines")
 	flag.BoolVar(opt.numbFlag, "n", false, "number all output lines (short arg)")
 
 	flag.Parse()
 
+	arguments := flag.Args()
+	if len(arguments) < 1 {
+		// No args are Equivalent to "-"
+		arguments = append(arguments, "-")
+	}
+
 	for _, arg := range arguments {
-		err := readInput(arg)
+		err := readInput(&opt, arg)
 		if err != nil {
 			fmt.Println(err.Error())
 			os.Exit(1)

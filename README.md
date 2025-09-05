@@ -18,5 +18,5 @@ I had added a for loop to go through all arguments passed into the program
 
 I need to parse flags to add line numbers to output.
 I'll put my flags into a struct and pass that around to determine what do.
-I think for args that involve formatting my output, I'll create a new function to format each line 
+I think for args that involve formatting my output, I'll create a new function to format each line
 as it prints according to the arguments.

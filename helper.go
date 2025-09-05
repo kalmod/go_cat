@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
-func readInput(inputString string) error {
+func readInput(opt *opts, inputString string) error {
 	fileCheck := isFile(inputString)
 	var scanner *bufio.Reader
 	if fileCheck {
@@ -31,7 +32,10 @@ func readInput(inputString string) error {
 			}
 			return fmt.Errorf("ERROR::Reading File::%s", err)
 		}
-		fmt.Print(string(line))
+		formatPrinterr := formatPrint(opt, line)
+		if formatPrinterr != nil {
+			return fmt.Errorf("ERROR::Printing line::%s", formatPrinterr)
+		}
 	}
 }
 
@@ -50,4 +54,21 @@ func openFile(filePath string) (*os.File, error) {
 		return nil, fmt.Errorf("ERROR::%s", err.Error())
 	}
 	return file, err
+}
+
+func formatPrint(opt *opts, line []byte) error {
+	var sb strings.Builder
+	if *opt.numbFlag {
+		opt.lineNumber++
+		_, err := sb.WriteString(fmt.Sprintf("%6d. ", opt.lineNumber))
+		if err != nil {
+			return err
+		}
+	}
+	_, err := sb.Write(line)
+	if err != nil {
+		return err
+	}
+	fmt.Print(sb.String())
+	return nil
 }
