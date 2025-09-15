@@ -58,12 +58,19 @@ func openFile(filePath string) (*os.File, error) {
 
 func formatPrint(opt *opts, line []byte) error {
 	var sb strings.Builder
-	if *opt.numbFlag {
-		opt.lineNumber++
-		_, err := sb.WriteString(fmt.Sprintf("%6d. ", opt.lineNumber))
+	if *opt.numbFlag || *opt.numbNBFlag {
+		var err error
+		if *opt.numbNBFlag && len(line) == 1 && line[0] == byte('\n') {
+			_, err = sb.WriteString(fmt.Sprintf("%6s ", " "))
+		} else {
+			opt.lineNumber++
+			_, err = sb.WriteString(fmt.Sprintf("%6d ", opt.lineNumber))
+
+		}
 		if err != nil {
 			return err
 		}
+
 	}
 	_, err := sb.Write(line)
 	if err != nil {
